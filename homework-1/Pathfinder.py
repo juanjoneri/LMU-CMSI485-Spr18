@@ -23,19 +23,29 @@ class Pathfinder:
             totalCost=0,\
             heuristicCost=problem.heuristic(problem.initial))
 
-        to_visit = heappush([], current_node) # priority q
-        while not problem.goal_test(current_node.state):
+        to_visit = [current_node] # priority q
+        visited_states = []
+
+        while any(to_visit) and not problem.goalTest(current_node.state):
             current_node = heappop(to_visit)
-            children = problem.transitions(current_node.state)
-            for child in children:
-                child_action, child_cost, child_state = child
+            if current_node.state in visited_states:
+                continue
+            else:
+                visited_states.append(current_node.state)
+
+            transitions = problem.transitions(current_node.state)
+            for transition in transitions:
+                child_action, child_cost, child_state = transition
                 child_node = SearchTreeNode(\
-                state=child_state,\
-                action=child_action,\
-                parent=current_node,\
-                totalCost=current_node.totalCost + child_cost,\
-                heuristicCost=problem.heuristic(child_state))
-                heappush(child_node)
+                    state=child_state,\
+                    action=child_action,\
+                    parent=current_node,\
+                    totalCost=current_node.totalCost + child_cost,\
+                    heuristicCost=problem.heuristic(child_state))
+                heappush(to_visit, child_node)
+
+        if not problem.goalTest(current_node.state):
+            return None
 
         path = []
         while current_node.parent != None:
@@ -46,7 +56,11 @@ class Pathfinder:
 
 class PathfinderTests(unittest.TestCase):
     def test_maze1(self):
-        maze = ["XXXXX", "X..GX", "X...X", "X*..X", "XXXXX"]
+        maze = ["XXXXX", \
+                "X..GX", \
+                "X...X", \
+                "X*..X", \
+                "XXXXX"]
         problem = MazeProblem(maze)
         soln = Pathfinder.solve(problem)
         solnTest = problem.solnTest(soln)
@@ -54,7 +68,11 @@ class PathfinderTests(unittest.TestCase):
         self.assertEqual(solnTest[0], 4)
 
     def test_maze2(self):
-        maze = ["XXXXX", "XG..X", "XX..X", "X*..X", "XXXXX"]
+        maze = ["XXXXX", \
+                "XG..X", \
+                "XX..X", \
+                "X*..X", \
+                "XXXXX"]
         problem = MazeProblem(maze)
         soln = Pathfinder.solve(problem)
         solnTest = problem.solnTest(soln)
@@ -62,7 +80,11 @@ class PathfinderTests(unittest.TestCase):
         self.assertEqual(solnTest[0], 4)
 
     def test_maze3(self):
-        maze = ["XXXXX", "X..GX", "X.MMX", "X*..X", "XXXXX"]
+        maze = ["XXXXX", \
+                "X..GX", \
+                "X.MMX", \
+                "X*..X", \
+                "XXXXX"]
         problem = MazeProblem(maze)
         soln = Pathfinder.solve(problem)
         solnTest = problem.solnTest(soln)
@@ -70,7 +92,11 @@ class PathfinderTests(unittest.TestCase):
         self.assertEqual(solnTest[0], 4)
 
     def test_maze4(self):
-        maze = ["XXXXXX", "X....X", "X*.XXX", "X..XGX", "XXXXXX"]
+        maze = ["XXXXXX", \
+                "X....X", \
+                "X*.XXX", \
+                "X..XGX", \
+                "XXXXXX"]
         problem = MazeProblem(maze)
         soln = Pathfinder.solve(problem)
         self.assertFalse(soln)

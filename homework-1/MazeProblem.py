@@ -68,10 +68,10 @@ class MazeProblem:
     # goalTest is parameterized by a state, and
     # returns True if the given state is a goal, False otherwise
     def goalTest(self, state):
-        return state in goals
+        return state in self.goals
 
     @staticmethod
-    def _distance(initial_state, final_state):
+    def distance(initial_state, final_state):
         return np.linalg.norm(np.array(initial_state)-np.array(final_state))
 
     def valid(self, state):
@@ -86,11 +86,11 @@ class MazeProblem:
     def heuristic(self, state):
         min_distance = math.inf
         for goal in self.goals:
-            min_distance = min(min_distance, _distance(state, goal))
+            min_distance = min(min_distance, MazeProblem.distance(state, goal))
         return min_distance
 
     # transitions returns a list of tuples in the format:
-    # [(action1, cost_of_action1, result(action1, s), ...]
+    # [(action1, cost_of_action1, result(action1, s)), ...]
     # corresponding to allowable actions of the given state, as well
     # as the next state the action leads to
     def transitions(self, state):
