@@ -70,11 +70,7 @@ class MazeProblem:
     # goalTest is parameterized by a state, and
     # returns True if the given state is a goal, False otherwise
     def goalTest(self, state):
-        try:
-            col, row = state
-            return self.maze[row][col] == 'G'
-        except:
-            return False
+        return state in goals
 
     @staticmethod
     def _distance(initial_state, final_state):
@@ -112,9 +108,8 @@ class MazeProblem:
     # cost returns the cost of moving onto the given state, and employs
     # the MazeProblem's costMap
     def cost(self, state):
-        cm = MazeProblem.costMap
-        cell = self.maze[state[1]][state[0]]
-        return cm[cell]
+        col, row = state
+        return MazeProblem.costMap[self.maze[row][col]]
 
     # solnTest will return a tuple of the format (cost, isSoln) where:
     # cost = the total cost of the solution,
@@ -122,7 +117,7 @@ class MazeProblem:
     # [a1, a2, ...] successfully navigates to a goal state from the initial state
     # If NOT a solution, return a cost of -1
     def solnTest(self, soln):
-        trans = {"U": (0, -1), "D": (0, 1), "L": (-1, 0), "R": (1, 0)}
+        trans = MazeProblem.actions
         s = self.initial
         tc = 0
         for m in soln:
