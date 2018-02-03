@@ -47,9 +47,7 @@ into clear tiles (.), then the transitions for that s = (1, 1) would be:
 import numpy as np
 import math
 class MazeProblem:
-    # Static costMap for maze components and the cost to move onto them
-    # Any component not listed assumed to have a cost of 1
-    costMap = {"M": 3, ".": 1}
+    costMap = {"M": 3, ".": 1, "G": 1, "*": 1}
     actions = {"U":(0, -1) , "D":(0, 1), "L":(-1, 0), "R":(1, 0)}
 
     # MazeProblem Constructor:
@@ -108,6 +106,7 @@ class MazeProblem:
     # cost returns the cost of moving onto the given state, and employs
     # the MazeProblem's costMap
     def cost(self, state):
+        if not self.valid(state): return math.inf
         col, row = state
         return MazeProblem.costMap[self.maze[row][col]]
 
