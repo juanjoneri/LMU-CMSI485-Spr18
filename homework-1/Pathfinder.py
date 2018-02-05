@@ -24,14 +24,16 @@ class Pathfinder:
             heuristicCost=problem.heuristic(problem.initial))
 
         to_visit = [current_node] # priority q
-        visited_states = []
+        visited_states = set()
+
+        deb_count = 1 # for report
 
         while any(to_visit) and not problem.goalTest(current_node.state):
             current_node = heappop(to_visit)
             if current_node.state in visited_states:
                 continue
             else:
-                visited_states.append(current_node.state)
+                visited_states.add(current_node.state)
 
             transitions = problem.transitions(current_node.state)
             for transition in transitions:
@@ -43,7 +45,9 @@ class Pathfinder:
                     totalCost=current_node.totalCost + child_cost,\
                     heuristicCost=problem.heuristic(child_state))
                 heappush(to_visit, child_node)
+                deb_count += 1
 
+        print("count: ", deb_count)
         if not problem.goalTest(current_node.state):
             return None
 
@@ -103,4 +107,46 @@ class PathfinderTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    maze_1 = \
+        ["XXXXXXXXXXXX",\
+        "XG.......XGX",\
+        "X...XXX..X.X",\
+        "X...XGX..X.X",\
+        "X...XXX..X.X",\
+        "X.......XX.X",\
+        "X..........X",\
+        "X......XXXXX",\
+        "X.........*X",\
+        "XXXXXXXXXXXX"]
+
+    maze_2 =\
+        ["XXXXXXXXXXXXX",\
+        "X..G.G.G.G..X",\
+        "X.G.G.G.G.G.X",\
+        "X..G.G.G.G..X",\
+        "X...........X",\
+        "X...........X",\
+        "X...........X",\
+        "X.XX.XXX.XX.X",\
+        "X.....*.....X",\
+        "XXXXXXXXXXXXX"]
+
+    maze_3 = \
+        ["XXXXXXXXXXXXXXXXX",\
+        "X...............X",\
+        "X.XXXXX...XXXXX.X",\
+        "X.X...........X.X",\
+        "X.X....*......X.X",\
+        "X.X...........X.X",\
+        "X.XXXXXXXXXXXXX.X",\
+        "X.......G.......X",\
+        "XXXXXXXXXXXXXXXXX"]
+
+    mazes = [maze_1, maze_2, maze_3]
+
+    for maze in mazes:
+        problem = MazeProblem(maze)
+        solution = Pathfinder.solve(problem)
+        # make sure its correct
+        print("solution: ", len(solution))
