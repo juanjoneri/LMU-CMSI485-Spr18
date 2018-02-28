@@ -78,5 +78,5 @@ I used a simple `set` as the data structure for the `explored` set. Because orde
 
 | Breadth-first Tree Search | A* Graph Search |
 | ------------------------- | --------------- |
-|                           | 183             |
+| > 30000000 (never ended)  | 183             |
 
