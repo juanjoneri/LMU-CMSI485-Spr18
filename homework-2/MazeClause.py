@@ -7,7 +7,6 @@ class MazeClause:
     def __init__(self, props):
         self.props = {}
         self.valid = False
-        # ("X", (1, 1)), True)
         for coord, status in props:
             if coord not in self.props:
                 self.setProp(coord, status)
@@ -46,7 +45,7 @@ class MazeClause:
         return hash(frozenset(self.props.items()))
 
     def __str__ (self):
-        return f'Valid: {self.valid}\nProps: {self.props}'
+        return f'{"Valid" if self.valid else "Invalid"} clause with props:\n{self.props}'
 
     @staticmethod
     def _invert(prop):
@@ -66,18 +65,18 @@ class MazeClause:
 
     @staticmethod
     def resolve(clause_1, clause_2):
-        if clause_1.isEmpty() or clause_2.isEmpty() or\
-           clause_1.isValid() or clause_2.isValid():
+        if clause_1.isValid() or clause_2.isValid():
             return set()
 
         union = set(clause_1.props.items()) | set(clause_2.props.items())
         resolution, altered = MazeClause._remove_inverse(union)
         new_clause = MazeClause(resolution)
 
-        if not altered or new_clause.isValid():
-            return set()
-        else:
+        if altered and not new_clause.isValid():
             return {new_clause}
+        else:
+            return set()
+
 
 
 
