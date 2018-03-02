@@ -1,3 +1,4 @@
+# JUAN NERI
 import unittest
 from collections import Counter
 
@@ -16,6 +17,7 @@ class MazeClause:
 
     @classmethod
     def emptyClause(cls):
+        # Default constructor for an empty clause
         return cls([])
 
     def setProp(self, coord, status):
